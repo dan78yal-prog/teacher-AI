@@ -9,7 +9,14 @@ export const generateLessonPlan = async (
   details: string
 ): Promise<LessonPlan | null> => {
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    // @ts-ignore
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+      console.error("API_KEY is not defined in the environment.");
+      return null;
+    }
+
+    const ai = new GoogleGenAI({ apiKey });
 
     const prompt = `
       قم بإنشاء خطة درس تفصيلية للمعلم باللغة العربية.
