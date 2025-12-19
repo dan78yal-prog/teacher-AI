@@ -1,3 +1,4 @@
+
 export enum DayOfWeek {
   SUNDAY = 'الأحد',
   MONDAY = 'الاثنين',
@@ -10,8 +11,8 @@ export interface Student {
   id: string;
   name: string;
   notes: string;
-  attendance: Record<string, 'present' | 'absent' | 'late' | 'excused'>; // key is date string YYYY-MM-DD
-  participationScore: number; // 0-10
+  attendance: Record<string, 'present' | 'absent' | 'late' | 'excused'>;
+  participationScore: number;
 }
 
 export interface ClassGroup {
@@ -34,7 +35,7 @@ export interface LessonPlan {
 export interface ScheduleSlot {
   id: string;
   day: DayOfWeek;
-  period: number; // 1 to 7
+  period: number;
   className: string;
   lessonPlan?: LessonPlan;
 }
@@ -47,8 +48,12 @@ export interface Task {
   dueDate?: string;
 }
 
-export type ViewMode = 'schedule' | 'classes' | 'tracker' | 'tasks' | 'reports';
+export type ViewMode = 'schedule' | 'classes' | 'tracker' | 'tasks' | 'reports' | 'settings';
 
-export interface AIConfig {
-  apiKey: string;
+export type ThemeColor = 'emerald' | 'blue' | 'purple' | 'orange' | 'rose';
+
+export interface AppSettings {
+  themeColor: ThemeColor;
+  teacherName: string;
+  schoolName: string;
 }

@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { LessonPlan } from "../types";
 
@@ -11,7 +12,7 @@ export const generateLessonPlan = async (
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
     const prompt = `
-      قم بإنشاء خطة درس تفصيلية للمعلم.
+      قم بإنشاء خطة درس تفصيلية للمعلم باللغة العربية.
       المادة: ${subject}
       الموضوع: ${topic}
       الصف الدراسي: ${gradeLevel}
@@ -21,8 +22,8 @@ export const generateLessonPlan = async (
     `;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
+      model: 'gemini-3-flash-preview',
+      contents: [{ parts: [{ text: prompt }] }],
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -45,7 +46,8 @@ export const generateLessonPlan = async (
               type: Type.STRING,
               description: "الواجب المنزلي المقترح"
             }
-          }
+          },
+          required: ["objectives", "materials", "content", "homework"]
         }
       }
     });

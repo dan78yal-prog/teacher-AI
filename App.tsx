@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { WeeklyPlanner } from './components/WeeklyPlanner';
@@ -5,23 +6,52 @@ import { ClassManager } from './components/ClassManager';
 import { StudentTracker } from './components/StudentTracker';
 import { TaskManager } from './components/TaskManager';
 import { ReportsDashboard } from './components/ReportsDashboard';
-import { ViewMode, ScheduleSlot, ClassGroup, Student, Task } from './types';
+import { SettingsView } from './components/SettingsView';
+import { ViewMode, ScheduleSlot, ClassGroup, Student, Task, ThemeColor, AppSettings } from './types';
 import { INITIAL_CLASSES, INITIAL_SCHEDULE } from './constants';
 import { Moon, Sun } from 'lucide-react';
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewMode>('schedule');
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return localStorage.getItem('muallim-dark-mode') === 'true';
+  });
+  const [settings, setSettings] = useState<AppSettings>(() => {
+    const savedSettings = localStorage.getItem('muallim-settings');
+    return savedSettings ? JSON.parse(savedSettings) : {
+      themeColor: 'emerald',
+      teacherName: 'المعلم الذكي',
+      schoolName: 'مدرستي المتميزة'
+    };
+  });
   
-  // App State
-  const [schedule, setSchedule] = useState<ScheduleSlot[]>(INITIAL_SCHEDULE);
-  const [classes, setClasses] = useState<ClassGroup[]>(INITIAL_CLASSES);
-  const [tasks, setTasks] = useState<Task[]>([
+  const [schedule, setSchedule] = useState<ScheduleSlot[]>(() => {
+    const saved = localStorage.getItem('muallim-schedule');
+    return saved ? JSON.parse(saved) : INITIAL_SCHEDULE;
+  });
+  
+  const [classes, setClasses] = useState<ClassGroup[]>(() => {
+    const saved = localStorage.getItem('muallim-classes');
+    return saved ? JSON.parse(saved) : INITIAL_CLASSES;
+  });
+  
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    const saved = localStorage.getItem('muallim-tasks');
+    return saved ? JSON.parse(saved) : [
       { id: '1', text: 'تحضير درس الرياضيات ليوم الأحد', completed: false, priority: 'high' },
       { id: '2', text: 'رصد درجات الاختبار الشهري', completed: true, priority: 'medium' }
-  ]);
+    ];
+  });
 
-  // Toggle Dark Mode
+  // Persist data
+  useEffect(() => {
+    localStorage.setItem('muallim-dark-mode', isDarkMode.toString());
+    localStorage.setItem('muallim-settings', JSON.stringify(settings));
+    localStorage.setItem('muallim-schedule', JSON.stringify(schedule));
+    localStorage.setItem('muallim-classes', JSON.stringify(classes));
+    localStorage.setItem('muallim-tasks', JSON.stringify(tasks));
+  }, [isDarkMode, settings, schedule, classes, tasks]);
+
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
@@ -30,7 +60,15 @@ function App() {
     }
   }, [isDarkMode]);
 
-  // --- Schedule Handlers ---
+  // Theme Color Class Mapping
+  const themeClasses: Record<ThemeColor, string> = {
+    emerald: 'theme-emerald',
+    blue: 'theme-blue',
+    purple: 'theme-purple',
+    orange: 'theme-orange',
+    rose: 'theme-rose'
+  };
+
   const handleUpdateSchedule = (updatedSlot: ScheduleSlot) => {
     setSchedule(prev => prev.map(slot => 
         (slot.day === updatedSlot.day && slot.period === updatedSlot.period) 
@@ -39,7 +77,6 @@ function App() {
     ));
   };
 
-  // --- Class Handlers ---
   const handleAddClass = (name: string) => {
     const newClass: ClassGroup = {
         id: Math.random().toString(36).substring(2),
@@ -53,7 +90,6 @@ function App() {
       setClasses(classes.filter(c => c.id !== id));
   };
 
-  // --- Student Handlers ---
   const handleAddStudent = (classId: string, name: string) => {
       setClasses(classes.map(c => {
           if (c.id === classId) {
@@ -115,7 +151,6 @@ function App() {
       }));
   };
 
-  // --- Task Handlers ---
   const handleAddTask = (text: string, priority: 'high' | 'medium' | 'low', date?: string) => {
       const newTask: Task = {
           id: Math.random().toString(36).substring(2),
@@ -136,18 +171,18 @@ function App() {
   };
 
   return (
-    <div className="flex h-[100dvh] bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 overflow-hidden flex-col lg:flex-row transition-colors duration-300">
+    <div className={`flex h-[100dvh] bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 overflow-hidden flex-col lg:flex-row transition-colors duration-300 ${themeClasses[settings.themeColor]}`}>
       {/* Mobile Header */}
       <div className="lg:hidden h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 shrink-0 z-30 sticky top-0 shadow-sm">
         <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20 transform rotate-3">
+            <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 transform rotate-3">
                 <span className="text-white font-bold text-lg">م</span>
             </div>
             <span className="font-bold text-xl text-slate-800 dark:text-white tracking-tight">معلم AI</span>
         </div>
         <button 
             onClick={() => setIsDarkMode(!isDarkMode)} 
-            className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
+            className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors active:scale-90"
         >
             {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </button>
@@ -155,26 +190,30 @@ function App() {
 
       <Sidebar currentView={currentView} setView={setCurrentView} />
       
-      {/* Main Content */}
       <main className="flex-1 h-full overflow-hidden relative flex flex-col">
-        {/* Banner Section - Updated Image */}
         <div className="h-32 md:h-48 relative w-full shrink-0 overflow-hidden group">
             <img 
                 src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070&auto=format&fit=crop" 
-                alt="Modern Classroom Banner" 
-                className="w-full h-full object-cover object-center opacity-90 dark:opacity-60 transition-transform duration-1000 group-hover:scale-105"
+                alt="Banner" 
+                className="w-full h-full object-cover object-center opacity-90 dark:opacity-60 transition-transform duration-[2s] group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-50 dark:from-slate-950 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-50 dark:from-slate-950 via-transparent to-transparent"></div>
             
-            {/* Desktop Dark Mode Toggle (Absolute positioned on Banner) */}
             <div className="absolute top-4 left-4 hidden lg:block">
                 <button 
                     onClick={() => setIsDarkMode(!isDarkMode)} 
-                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-md text-slate-800 dark:text-white shadow-lg transition-all hover:scale-105 border border-white/20"
+                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-md text-slate-800 dark:text-white shadow-xl transition-all hover:scale-105 active:scale-95 border border-white/20"
                 >
                     {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                    <span className="text-sm font-bold">{isDarkMode ? 'الوضع النهاري' : 'الوضع الليلي'}</span>
+                    <span className="text-xs font-bold">{isDarkMode ? 'الوضع النهاري' : 'الوضع الليلي'}</span>
                 </button>
+            </div>
+            
+            <div className="absolute bottom-10 right-6 animate-in slide-in-from-right duration-700">
+                <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white drop-shadow-sm tracking-tight">{settings.schoolName}</h1>
+                <p className="text-slate-600 dark:text-slate-300 font-bold opacity-80 flex items-center gap-2">
+                   <span className="w-8 h-0.5 bg-primary rounded-full"></span> {settings.teacherName}
+                </p>
             </div>
         </div>
 
@@ -215,6 +254,12 @@ function App() {
                     <ReportsDashboard 
                         classes={classes}
                         schedule={schedule}
+                    />
+                )}
+                {currentView === 'settings' && (
+                    <SettingsView 
+                        settings={settings}
+                        setSettings={setSettings}
                     />
                 )}
             </div>
