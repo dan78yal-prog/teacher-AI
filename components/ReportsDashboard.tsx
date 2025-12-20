@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ClassGroup, ScheduleSlot } from '../types';
+import { ClassGroup, ScheduleSlot, LessonPlan } from '../types';
 import { BarChart3, TrendingUp, Users, Calendar, AlertTriangle, CheckCircle, Clock, Download, FileSpreadsheet } from 'lucide-react';
 
 interface ReportsDashboardProps {
@@ -29,7 +29,9 @@ export const ReportsDashboard: React.FC<ReportsDashboardProps> = ({ classes, sch
 
   const attendanceRate = totalRecords > 0 ? Math.round((totalPresent / totalRecords) * 100) : 0;
   const totalSlots = schedule.length;
-  const plannedSlots = schedule.filter(s => s.lessonPlan && s.lessonPlan.topic).length;
+  // Fix: Property 'lessonPlan' was removed from ScheduleSlot; use weekPlans record and check for existing topics
+  // Explicitly cast plan as LessonPlan to avoid 'unknown' type error in TypeScript
+  const plannedSlots = schedule.filter(s => s.weekPlans && Object.values(s.weekPlans).some(plan => (plan as LessonPlan).topic)).length;
   const planningProgress = Math.round((plannedSlots / totalSlots) * 100);
 
   const exportToCSV = () => {

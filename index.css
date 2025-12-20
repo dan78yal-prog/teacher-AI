@@ -1,47 +1,103 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap');
+
+:root {
+  --radius-xl: 16px;
+  --transition-vibrant: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 body {
   font-family: 'Cairo', sans-serif;
-  -webkit-tap-highlight-color: transparent;
+  background-color: #f8fafc;
+  color: #1e293b;
+  overflow: hidden;
+  height: 100dvh;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Theme color definitions */
-.theme-emerald { --primary: #10b981; }
-.theme-blue { --primary: #3b82f6; }
-.theme-purple { --primary: #a855f7; }
-.theme-orange { --primary: #f97316; }
-.theme-rose { --primary: #f43f5e; }
-
-.bg-primary { background-color: var(--primary); }
-.text-primary { color: var(--primary); }
-.border-primary { border-color: var(--primary); }
-.ring-primary { --tw-ring-color: var(--primary); }
-
-/* Custom Scrollbar */
-@media (min-width: 768px) {
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
-  }
-  .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #475569;
-  }
+.dark body {
+  background-color: #020617;
+  color: #f1f5f9;
 }
 
-@media (max-width: 767px) {
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+/* Vibrant Themes - Emerald Focus */
+.theme-emerald { --primary: #059669; --primary-dark: #064e3b; --primary-soft: #ecfdf5; --glow: 0 4px 12px rgba(5, 150, 105, 0.15); }
+.theme-blue { --primary: #2563eb; --primary-dark: #1e3a8a; --primary-soft: #eff6ff; --glow: 0 4px 12px rgba(37, 99, 235, 0.15); }
+.theme-purple { --primary: #7c3aed; --primary-dark: #4c1d95; --primary-soft: #f5f3ff; --glow: 0 4px 12px rgba(124, 58, 237, 0.15); }
+.theme-orange { --primary: #ea580c; --primary-dark: #7c2d12; --primary-soft: #fff7ed; --glow: 0 4px 12px rgba(234, 88, 12, 0.15); }
+.theme-rose { --primary: #e11d48; --primary-dark: #881337; --primary-soft: #fff1f2; --glow: 0 4px 12px rgba(225, 29, 72, 0.15); }
+
+/* Compact Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(5, 150, 105, 0.2); border-radius: 10px; }
+.dark ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Global Icon Styling */
+.icon-emerald {
+  color: #059669 !important;
+}
+.dark .icon-emerald {
+  color: #10b981 !important;
 }
 
-.gradient-text {
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-image: linear-gradient(to right, var(--primary), #14b8a6);
+.icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #ecfdf5;
+  color: #059669;
+  width: 36px;
+  height: 36px;
+  transition: var(--transition-vibrant);
+}
+
+.dark .icon-container {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.vibrant-card {
+  background: white;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  transition: var(--transition-vibrant);
+}
+.dark .vibrant-card {
+  background: #0f172a;
+  border-color: #1e293b;
+}
+
+/* Typography Overrides - Avoiding "Black" weights */
+h1, h2, h3, h4 {
+  font-weight: 700 !important;
+  letter-spacing: -0.01em;
+}
+
+.text-metadata {
+  color: #64748b;
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+/* Prominent Grade Badge */
+.grade-badge-prominent {
+  background: #059669;
+  color: white !important;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(5, 150, 105, 0.3);
+}
+
+.animate-vibrant {
+  animation: fadeIn 0.4s cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }

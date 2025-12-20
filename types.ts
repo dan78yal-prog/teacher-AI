@@ -13,6 +13,10 @@ export interface Student {
   notes: string;
   attendance: Record<string, 'present' | 'absent' | 'late' | 'excused'>;
   participationScore: number;
+  homeworkScore: number;
+  activityScore: number;
+  quizScore: number;
+  weeklyScores?: Record<number, number>;
 }
 
 export interface ClassGroup {
@@ -29,6 +33,7 @@ export interface LessonPlan {
   materials: string;
   content: string;
   homework: string;
+  strategy?: string;
   isGenerated: boolean;
 }
 
@@ -37,7 +42,7 @@ export interface ScheduleSlot {
   day: DayOfWeek;
   period: number;
   className: string;
-  lessonPlan?: LessonPlan;
+  weekPlans?: Record<number, LessonPlan>;
 }
 
 export interface Task {
@@ -56,4 +61,12 @@ export interface AppSettings {
   themeColor: ThemeColor;
   teacherName: string;
   schoolName: string;
+  voiceEnabled: boolean;
+  maxGrades: {
+    participation: number;
+    homework: number;
+    activity: number;
+    quiz: number;
+  };
+  isMasterScheduleLocked: boolean;
 }

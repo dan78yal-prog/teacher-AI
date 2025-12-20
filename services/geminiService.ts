@@ -9,28 +9,26 @@ export const generateLessonPlan = async (
   details: string
 ): Promise<LessonPlan | null> => {
   try {
-    // @ts-ignore
-    const apiKey = process.env.API_KEY;
-    if (!apiKey) {
-      console.error("API_KEY is not defined in the environment.");
-      return null;
-    }
-
-    const ai = new GoogleGenAI({ apiKey });
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
 
     const prompt = `
-      قم بإنشاء خطة درس تفصيلية للمعلم باللغة العربية.
+      بصفتك خبير تربوي، قم بإنشاء خطة درس احترافية ومبتكرة باللغة العربية.
       المادة: ${subject}
       الموضوع: ${topic}
-      الصف الدراسي: ${gradeLevel}
-      ملاحظات إضافية: ${details}
+      الصف: ${gradeLevel}
+      ملاحظات المعلم: ${details}
       
-      يجب أن تكون الخطة منظمة وتحتوي على الأهداف، المواد المطلوبة، المحتوى، والواجب المنزلي.
+      يجب أن تتضمن الخطة:
+      1. أهداف تعليمية واضحة (طبق تصنيف بلوم).
+      2. استراتيجية تدريس حديثة (مثل: فكر-زاوج-شارك، التعلم باللعب، الخرائط الذهنية).
+      3. محتوى تعليمي مقسم زمنياً (مقدمة، عرض، خاتمة).
+      4. واجب منزلي إبداعي.
     `;
 
+    // Fix: Using direct string for contents as per guidelines
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
-      contents: [{ parts: [{ text: prompt }] }],
+      contents: prompt,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -38,23 +36,24 @@ export const generateLessonPlan = async (
           properties: {
             objectives: {
               type: Type.ARRAY,
-              items: { type: Type.STRING },
-              description: "قائمة بأهداف الدرس"
+              items: { type: Type.STRING }
             },
             materials: {
-              type: Type.STRING,
-              description: "المواد والأدوات اللازمة"
+              type: Type.STRING
             },
             content: {
               type: Type.STRING,
-              description: "ملخص شرح الدرس والأنشطة الصفية"
+              description: "المحتوى التعليمي مقسم لفقرات"
+            },
+            strategy: {
+              type: Type.STRING,
+              description: "اسم الاستراتيجية وكيفية تطبيقها"
             },
             homework: {
-              type: Type.STRING,
-              description: "الواجب المنزلي المقترح"
+              type: Type.STRING
             }
           },
-          required: ["objectives", "materials", "content", "homework"]
+          required: ["objectives", "materials", "content", "strategy", "homework"]
         }
       }
     });
@@ -72,11 +71,12 @@ export const generateLessonPlan = async (
       objectives: data.objectives || [],
       materials: data.materials || '',
       content: data.content || '',
+      strategy: data.strategy || '',
       homework: data.homework || ''
     };
 
   } catch (error) {
-    console.error("Gemini API Error:", error);
+    console.error("AI Assistant Error:", error);
     return null;
   }
 };

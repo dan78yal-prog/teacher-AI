@@ -1,14 +1,16 @@
 
 import React from 'react';
-import { LayoutDashboard, Users, BookOpen, Settings, CheckSquare, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, Users, BookOpen, Settings, CheckSquare, BarChart3, GraduationCap } from 'lucide-react';
 import { ViewMode } from '../types';
 
 interface SidebarProps {
   currentView: ViewMode;
   setView: (view: ViewMode) => void;
+  teacherName: string;
+  schoolName: string;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, teacherName, schoolName }) => {
   const menuItems = [
     { id: 'schedule', label: 'الجدول', icon: LayoutDashboard },
     { id: 'tracker', label: 'المتابعة', icon: BookOpen },
@@ -19,20 +21,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
 
   return (
     <>
-    <div className="hidden lg:flex w-64 bg-slate-900 dark:bg-slate-950 text-white flex-col transition-all duration-300 shadow-2xl z-20 h-full relative overflow-hidden border-e border-slate-800">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-
-      <div className="h-24 flex items-center px-6 border-b border-slate-800/50 backdrop-blur-sm shrink-0">
-        <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 transform transition-transform hover:rotate-6 duration-300">
-             <span className="text-xl font-bold text-white">م</span>
-        </div>
-        <div className="ms-3 flex flex-col">
-            <span className="font-bold text-lg tracking-wide text-white">معلم AI</span>
-            <span className="text-[10px] text-slate-400">الإصدار 2.5</span>
+    {/* Desktop Sidebar */}
+    <div className="hidden lg:flex w-64 bg-white dark:bg-slate-900 flex-col z-20 h-full border-e border-slate-100 dark:border-slate-800">
+      <div className="h-20 flex items-center px-6 shrink-0">
+        <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-emerald-600 rounded-lg flex items-center justify-center text-white shadow-sm">
+                 <GraduationCap className="w-5 h-5" />
+            </div>
+            <div className="flex flex-col">
+                <span className="font-bold text-base tracking-tight leading-none text-slate-800 dark:text-white mb-1">معلم الذكاء</span>
+                <span className="text-[9px] font-bold text-emerald-600/70 uppercase tracking-widest">Muallim Suite</span>
+            </div>
         </div>
       </div>
 
-      <nav className="flex-1 py-6 space-y-2 px-3 overflow-y-auto custom-scrollbar">
+      <nav className="flex-1 py-4 space-y-1 px-3 overflow-y-auto no-scrollbar">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = currentView === item.id;
@@ -40,54 +43,53 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
             <button
               key={item.id}
               onClick={() => setView(item.id as ViewMode)}
-              className={`w-full flex items-center justify-start p-3 rounded-xl transition-all duration-300 group relative overflow-hidden
-                ${isActive 
-                    ? 'bg-primary text-white shadow-lg shadow-primary/30 translate-x-2' 
-                    : 'text-slate-400 hover:bg-slate-800/50 hover:text-white hover:translate-x-1'
-                }
-              `}
+              className={`w-full flex items-center px-4 py-2.5 rounded-xl transition-all duration-200 ${isActive ? 'bg-emerald-50 dark:bg-emerald-900/10 text-emerald-600' : 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-emerald-600'}`}
             >
-              <Icon className={`w-5 h-5 relative z-10 transition-transform duration-500 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
-              <span className={`ms-3 font-medium relative z-10 transition-transform duration-300 ${isActive ? 'translate-x-1' : 'group-hover:translate-x-0.5'}`}>{item.label}</span>
+              <Icon className={`w-4 h-4 ${isActive ? 'stroke-[2.5px]' : 'stroke-[1.8px] text-emerald-600/60'}`} />
+              <span className="ms-3 font-semibold text-[13px]">{item.label}</span>
             </button>
           );
         })}
       </nav>
 
-      <div className="p-4 border-t border-slate-800/50 shrink-0">
+      <div className="p-4 border-t border-slate-50 dark:border-slate-800">
         <button 
             onClick={() => setView('settings')}
-            className={`w-full flex items-center justify-start p-3 rounded-xl transition-all duration-300 group hover:translate-x-1 ${currentView === 'settings' ? 'bg-slate-800 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800/50'}`}
+            className={`w-full flex items-center gap-3 p-2.5 rounded-xl transition-all ${currentView === 'settings' ? 'bg-slate-50 dark:bg-slate-800' : 'hover:bg-slate-50 dark:hover:bg-slate-800'}`}
         >
-            <Settings className={`w-5 h-5 transition-transform duration-700 ease-in-out ${currentView === 'settings' ? 'rotate-90' : 'group-hover:rotate-90'}`} />
-            <span className="ms-3 text-sm font-medium">الإعدادات</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
+                <Settings className={`w-4 h-4 ${currentView === 'settings' ? 'text-emerald-600' : 'text-emerald-600/60'}`} />
+            </div>
+            <div className="flex flex-col text-right">
+                <span className="text-[11px] font-bold text-slate-700 dark:text-slate-200 truncate max-w-[120px]">{teacherName}</span>
+                <span className="text-[9px] font-medium text-slate-400">الإعدادات</span>
+            </div>
         </button>
       </div>
     </div>
 
-    <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 z-50 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)] pb-safe">
-        <div className="grid grid-cols-5 h-16 w-full max-w-md mx-auto">
-            {[...menuItems, { id: 'settings', label: 'إعدادات', icon: Settings }].slice(0, 5).map((item) => {
+    {/* Mobile Nav - Prominent Icons */}
+    <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] h-16 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl z-50 flex items-center justify-around border border-slate-200 dark:border-slate-800 rounded-[24px] shadow-[0_12px_40px_rgba(0,0,0,0.12)] px-2">
+        {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentView === item.id;
             return (
                 <button
                 key={item.id}
                 onClick={() => setView(item.id as ViewMode)}
-                className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-all duration-300 active:scale-90 group
-                    ${isActive ? 'text-primary' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'}
-                `}
+                className={`relative flex flex-col items-center justify-center w-12 h-12 rounded-2xl transition-all duration-300 ${isActive ? 'bg-emerald-600 text-white scale-110 shadow-lg shadow-emerald-600/30' : 'text-slate-400'}`}
                 >
-                <div className={`relative p-1 rounded-xl transition-all duration-300 ${isActive ? 'bg-primary/10 -translate-y-1.5 shadow-sm' : 'group-hover:-translate-y-1'}`}>
-                    <Icon className={`w-5 h-5 transition-all duration-300 ${isActive ? 'stroke-[2.5px] scale-110' : 'stroke-2 group-hover:scale-110'}`} />
-                </div>
-                <span className={`text-[9px] font-medium transition-opacity duration-300 ${isActive ? 'opacity-100 font-bold translate-y-0.5' : 'opacity-80'}`}>
-                    {item.label}
-                </span>
+                <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.5px]' : 'text-emerald-600/80 stroke-[2px]'}`} />
+                {isActive && <div className="absolute -bottom-1.5 w-1 h-1 bg-white rounded-full"></div>}
                 </button>
             );
-            })}
-        </div>
+        })}
+        <button
+            onClick={() => setView('settings')}
+            className={`flex flex-col items-center justify-center w-12 h-12 rounded-2xl transition-all duration-300 ${currentView === 'settings' ? 'bg-emerald-600 text-white scale-110 shadow-lg shadow-emerald-600/30' : 'text-slate-400'}`}
+        >
+            <Settings className={`w-5 h-5 ${currentView === 'settings' ? 'text-white' : 'text-emerald-600/80 stroke-[2px]'}`} />
+        </button>
     </div>
     </>
   );
