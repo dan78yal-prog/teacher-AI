@@ -65,7 +65,7 @@ export const StudentTracker: React.FC<StudentTrackerProps> = ({ classes, updateS
     <div className="h-full flex flex-col relative animate-vibrant overflow-visible">
       
       {/* Header Bar */}
-      <div className="px-4 lg:px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4 shrink-0 border-b border-slate-50 dark:border-slate-800 bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm z-20 relative">
+      <div className="px-4 lg:px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4 shrink-0 border-b border-slate-50 dark:border-slate-800 bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm z-30 relative">
         <div className="flex items-center justify-between w-full md:w-auto gap-3">
             <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 rounded-2xl flex items-center justify-center shadow-sm">
@@ -78,7 +78,7 @@ export const StudentTracker: React.FC<StudentTrackerProps> = ({ classes, updateS
             </div>
             <button 
               onClick={() => setShowGradeSettings(!showGradeSettings)}
-              className={`md:hidden p-2 rounded-xl transition-all ${showGradeSettings ? 'bg-emerald-600 text-white' : 'bg-white dark:bg-slate-800 text-slate-400 border border-slate-100 dark:border-slate-700'}`}
+              className={`md:hidden p-2 rounded-xl transition-all ${showGradeSettings ? 'bg-emerald-600 text-white shadow-lg' : 'bg-white dark:bg-slate-800 text-slate-400 border border-slate-100 dark:border-slate-700'}`}
             >
               <Settings2 className="w-5 h-5" />
             </button>
@@ -106,7 +106,7 @@ export const StudentTracker: React.FC<StudentTrackerProps> = ({ classes, updateS
 
       {/* Quick Max Grade Settings Panel */}
       {showGradeSettings && (
-        <div className="absolute top-[130px] md:top-[73px] left-0 right-0 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 p-4 lg:p-6 z-[120] shadow-xl animate-fade-down flex flex-col gap-4">
+        <div className="absolute top-[130px] md:top-[73px] left-0 right-0 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 p-4 lg:p-6 z-[100] shadow-2xl animate-fade flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <h3 className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest flex items-center gap-2">
               <Zap className="w-4 h-4 text-amber-500" /> تعديل الدرجات القصوى
@@ -123,7 +123,7 @@ export const StudentTracker: React.FC<StudentTrackerProps> = ({ classes, updateS
       )}
 
       {/* Tabs */}
-      <div className="px-6 py-3 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0 border-b border-slate-50 dark:border-slate-800 z-10 relative">
+      <div className="px-6 py-3 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0 border-b border-slate-50 dark:border-slate-800 z-20 relative">
           {classes.map(c => (
               <button
                   key={c.id}
@@ -140,7 +140,7 @@ export const StudentTracker: React.FC<StudentTrackerProps> = ({ classes, updateS
       </div>
 
       {/* Student List */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 lg:p-6 relative z-0">
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 lg:p-6 relative">
           {activeClass ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-28">
                 {filteredStudents.map((student) => {
@@ -188,17 +188,17 @@ export const StudentTracker: React.FC<StudentTrackerProps> = ({ classes, updateS
           )}
       </div>
 
-      {/* Grading Modal - Moved outside the relative flow to ensure fixed behavior works correctly */}
+      {/* Grading Modal */}
       {editingStudent && activeClass && (
-          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-              <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-md" onClick={() => setEditingStudent(null)}></div>
+          <div className="modal-overlay">
+              <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-md" onClick={() => setEditingStudent(null)}></div>
               <div className="w-full max-w-sm bg-white dark:bg-slate-900 rounded-[2rem] shadow-2xl relative z-10 overflow-hidden animate-vibrant border border-slate-200 dark:border-slate-800">
                   <div className="p-5 flex justify-between items-center border-b border-slate-50 dark:border-slate-800">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center font-bold text-lg border border-emerald-100">{editingStudent.name.charAt(0)}</div>
                         <h3 className="font-bold text-sm text-slate-900 dark:text-white leading-none">{editingStudent.name}</h3>
                       </div>
-                      <button onClick={() => setEditingStudent(null)} className="p-2 text-slate-400 hover:text-rose-500"><X className="w-5 h-5" /></button>
+                      <button onClick={() => setEditingStudent(null)} className="p-2 text-slate-400 hover:text-rose-500 transition-colors"><X className="w-5 h-5" /></button>
                   </div>
 
                   <div className="p-6 space-y-6">
@@ -227,14 +227,14 @@ const MaxGradeInput = ({ label, value, icon, onChange }: { label: string, value:
       <span className="text-[10px] font-bold text-slate-500 uppercase">{label}</span>
     </div>
     <div className="flex items-center gap-2">
-      <button onClick={() => onChange(Math.max(1, value - 1))} className="p-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-400 hover:text-emerald-600"><Minus className="w-3 h-3" /></button>
+      <button onClick={() => onChange(Math.max(1, value - 1))} className="p-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-400 hover:text-emerald-600 transition-colors"><Minus className="w-3 h-3" /></button>
       <input 
         type="number" 
         value={value} 
         onChange={(e) => onChange(parseInt(e.target.value) || 0)}
         className="flex-1 w-full text-center bg-transparent text-xs font-black text-slate-800 dark:text-white outline-none"
       />
-      <button onClick={() => onChange(value + 1)} className="p-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-400 hover:text-emerald-600"><Plus className="w-3 h-3" /></button>
+      <button onClick={() => onChange(value + 1)} className="p-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-400 hover:text-emerald-600 transition-colors"><Plus className="w-3 h-3" /></button>
     </div>
   </div>
 );

@@ -28,19 +28,19 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSetting
   };
 
   return (
-    <div className="h-full p-6 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
+    <div className="h-full p-6 flex flex-col gap-6 overflow-y-auto custom-scrollbar animate-fade">
+      <div className="flex items-center gap-3 shrink-0">
+        <div className="w-10 h-10 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 rounded-xl flex items-center justify-center border border-emerald-100 dark:border-emerald-900/20 shadow-sm">
           <Settings className="w-5 h-5" />
         </div>
         <div>
           <h2 className="text-lg font-bold text-slate-900 dark:text-white leading-none">الإعدادات</h2>
-          <p className="text-slate-400 text-[9px] uppercase tracking-widest mt-1">تخصيص لوحة المعلم</p>
+          <p className="text-slate-400 text-[9px] uppercase font-bold tracking-widest mt-1">تخصيص لوحة المعلم</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20 lg:pb-0">
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 space-y-6 shadow-sm">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-24 lg:pb-6">
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 space-y-6 shadow-sm flex flex-col">
               <h3 className="font-bold text-sm flex items-center gap-2 text-slate-700 dark:text-slate-200"><Palette className="w-4 h-4 text-emerald-600" /> مظهر التطبيق</h3>
               <div className="grid grid-cols-5 gap-3">
                   {colors.map(color => (
@@ -54,11 +54,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSetting
                   ))}
               </div>
 
-              <div className="pt-4 border-t border-slate-50 dark:border-slate-800">
+              <div className="pt-6 mt-auto border-t border-slate-50 dark:border-slate-800">
                   <h3 className="font-bold text-[11px] mb-3 text-slate-500 uppercase tracking-widest">المساعد الصوتي</h3>
                   <button 
                     onClick={() => setSettings({ ...settings, voiceEnabled: !settings.voiceEnabled })}
-                    className={`w-full p-3.5 rounded-xl flex items-center justify-between border ${settings.voiceEnabled ? 'bg-emerald-50 border-emerald-600/30 text-emerald-600' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400'}`}
+                    className={`w-full p-3.5 rounded-xl flex items-center justify-between border transition-all ${settings.voiceEnabled ? 'bg-emerald-50 border-emerald-600/30 text-emerald-600' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-400'}`}
                   >
                     <span className="text-[11px] font-bold uppercase">{settings.voiceEnabled ? 'مفعل' : 'معطل'}</span>
                     {settings.voiceEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
@@ -69,7 +69,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSetting
           <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 space-y-6 shadow-sm">
               <h3 className="font-bold text-sm flex items-center gap-2 text-slate-700 dark:text-slate-200"><Database className="w-4 h-4 text-emerald-600" /> الدرجات القصوى</h3>
               
-              <div className="space-y-5 bg-slate-50 dark:bg-slate-900/40 p-5 rounded-2xl border border-slate-100 dark:border-slate-800">
+              <div className="space-y-6 bg-slate-50 dark:bg-slate-900/40 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-inner">
                 <GradeSettingRow label="المشاركة" value={settings.maxGrades.participation} icon={<Star className="w-3.5 h-3.5" />} onChange={(v: number) => updateMaxGrade('participation', v)} />
                 <GradeSettingRow label="الواجبات" value={settings.maxGrades.homework} icon={<PenTool className="w-3.5 h-3.5" />} onChange={(v: number) => updateMaxGrade('homework', v)} />
                 <GradeSettingRow label="الأنشطة" value={settings.maxGrades.activity} icon={<Lightbulb className="w-3.5 h-3.5" />} onChange={(v: number) => updateMaxGrade('activity', v)} />
@@ -88,14 +88,14 @@ const GradeSettingRow = ({ label, value, icon, onChange }: { label: string, valu
         <span className="opacity-80">{icon}</span>
         <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300">{label}</span>
       </div>
-      <span className="px-2 py-0.5 bg-emerald-600 text-white rounded-full text-[10px] font-bold">{value} د</span>
+      <span className="px-2 py-0.5 bg-emerald-600 text-white rounded-full text-[10px] font-bold shadow-sm">{value} د</span>
     </div>
     <input 
       type="range" 
       min="5" 
       max="100" 
       step="5"
-      className="w-full accent-emerald-600 h-1 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer"
+      className="w-full accent-emerald-600 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer"
       value={value}
       onChange={(e) => onChange(parseInt(e.target.value))}
     />

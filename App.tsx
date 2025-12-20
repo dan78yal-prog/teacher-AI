@@ -72,12 +72,12 @@ function App() {
     <div className="flex h-[100dvh] w-screen overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors flex-col lg:flex-row">
       <Sidebar currentView={currentView} setView={setCurrentView} teacherName={settings.teacherName} schoolName={settings.schoolName} />
       
-      <main className="flex-1 relative flex flex-col h-full overflow-hidden z-10">
+      <main className="flex-1 relative flex flex-col h-full overflow-hidden">
         <div className="app-bg-overlay !h-[250px] lg:!h-[350px]"></div>
         <div className="app-bg-blur !h-[300px] lg:!h-[400px]"></div>
 
-        <header className="h-32 lg:h-48 flex flex-col items-center justify-center relative shrink-0 px-4">
-          <div className="absolute top-4 right-4 lg:top-6 lg:left-8 z-20">
+        <header className="h-32 lg:h-48 flex flex-col items-center justify-center relative shrink-0 px-4 z-20">
+          <div className="absolute top-4 right-4 lg:top-6 lg:left-8">
             <button 
               onClick={() => setIsDarkMode(!isDarkMode)} 
               className="flex items-center gap-2 px-3 py-1.5 bg-white/90 dark:bg-slate-800/90 rounded-full shadow-lg text-[10px] lg:text-xs font-bold transition-all hover:scale-105 active:scale-95"
@@ -97,9 +97,10 @@ function App() {
           </div>
         </header>
 
-        <div className="flex-1 overflow-hidden px-3 lg:px-10 pb-20 lg:pb-10">
-          <div className="h-full glass-card rounded-[1.5rem] lg:rounded-[2.5rem] flex flex-col shadow-2xl animate-fade border border-white/40 dark:border-slate-800/50 relative overflow-visible">
-            <div className="flex-1 overflow-hidden relative rounded-[1.5rem] lg:rounded-[2.5rem]">
+        <div className="flex-1 px-3 lg:px-10 pb-20 lg:pb-10 overflow-hidden">
+          <div className="h-full glass-card rounded-[1.5rem] lg:rounded-[2.5rem] flex flex-col shadow-2xl animate-fade border border-white/40 dark:border-slate-800/50 overflow-visible">
+            {/* The actual content area should handle its own scrolling to not clip fixed children */}
+            <div className="flex-1 relative h-full">
               {currentView === 'schedule' && <WeeklyPlanner schedule={schedule} classes={classes} updateSchedule={handleUpdateSchedule} currentWeek={currentWeek} setCurrentWeek={setCurrentWeek} voiceEnabled={settings.voiceEnabled} />}
               {currentView === 'classes' && (
                 <ClassManager 
