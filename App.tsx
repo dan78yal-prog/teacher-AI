@@ -9,40 +9,20 @@ import { ReportsDashboard } from './components/ReportsDashboard';
 import { SettingsView } from './components/SettingsView';
 import { ViewMode, ScheduleSlot, ClassGroup, Student, Task, ThemeColor, AppSettings } from './types';
 import { INITIAL_CLASSES, INITIAL_SCHEDULE } from './constants';
-import { Moon, Sun, Bell, User as UserIcon, GraduationCap } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewMode>('schedule');
   const [currentWeek, setCurrentWeek] = useState(1);
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    return localStorage.getItem('muallim-dark-mode') === 'true';
-  });
+  const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('muallim-dark-mode') === 'true');
   const [settings, setSettings] = useState<AppSettings>(() => {
-    const savedSettings = localStorage.getItem('muallim-settings');
-    if (savedSettings) {
-      const parsed = JSON.parse(savedSettings);
-      if (typeof parsed.maxGrade === 'number') {
-        parsed.maxGrades = {
-          participation: parsed.maxGrade,
-          homework: parsed.maxGrade,
-          activity: parsed.maxGrade,
-          quiz: parsed.maxGrade
-        };
-        delete parsed.maxGrade;
-      }
-      return parsed;
-    }
-    return {
+    const saved = localStorage.getItem('muallim-settings');
+    return saved ? JSON.parse(saved) : {
       themeColor: 'emerald',
       teacherName: 'المعلم الذكي',
       schoolName: 'مدرستي المتميزة',
       voiceEnabled: true,
-      maxGrades: {
-        participation: 10,
-        homework: 10,
-        activity: 10,
-        quiz: 10
-      },
+      maxGrades: { participation: 10, homework: 10, activity: 10, quiz: 10 },
       isMasterScheduleLocked: false
     };
   });
@@ -71,134 +51,59 @@ function App() {
   }, [isDarkMode, settings, schedule, classes, tasks]);
 
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    if (isDarkMode) document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
   }, [isDarkMode]);
 
-  const themeClasses: Record<ThemeColor, string> = {
-    emerald: 'theme-emerald',
-    blue: 'theme-blue',
-    purple: 'theme-purple',
-    orange: 'theme-orange',
-    rose: 'theme-rose'
-  };
-
-  const handleUpdateSchedule = (updatedSlot: ScheduleSlot) => {
-    setSchedule(prev => prev.map(slot => 
-        (slot.day === updatedSlot.day && slot.period === updatedSlot.period) 
-        ? updatedSlot 
-        : slot
-    ));
-  };
-
-  const handleUpdateStudent = (classId: string, updatedStudent: Student) => {
-      setClasses(classes.map(c => {
-          if (c.id === classId) {
-              return {
-                  ...c,
-                  students: c.students.map(s => s.id === updatedStudent.id ? updatedStudent : s)
-              };
-          }
-          return c;
-      }));
-  };
+  const handleUpdateSchedule = (updatedSlot: ScheduleSlot) => setSchedule(prev => prev.map(slot => (slot.day === updatedSlot.day && slot.period === updatedSlot.period) ? updatedSlot : slot));
+  const handleUpdateStudent = (classId: string, updatedStudent: Student) => setClasses(classes.map(c => c.id === classId ? { ...c, students: c.students.map(s => s.id === updatedStudent.id ? updatedStudent : s) } : c));
+  const handleAddTask = (text: string, priority: 'high' | 'medium' | 'low', dueDate?: string) => setTasks([{ id: Math.random().toString(36).substring(7), text, priority, dueDate, completed: false }, ...tasks]);
+  const handleToggleTask = (id: string) => setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+  const handleDeleteTask = (id: string) => setTasks(tasks.filter(t => t.id !== id));
 
   return (
-    <div className={`flex h-[100dvh] bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 overflow-hidden flex-col lg:flex-row transition-all ${themeClasses[settings.themeColor]}`}>
-      
+    <div className="flex h-[100dvh] w-screen overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors flex-col lg:flex-row">
       <Sidebar currentView={currentView} setView={setCurrentView} teacherName={settings.teacherName} schoolName={settings.schoolName} />
       
-      <main className="flex-1 h-full overflow-hidden relative flex flex-col">
-        
-        <header className="h-20 flex items-center justify-between px-8 md:px-12 shrink-0 z-30 border-b border-emerald-100 dark:border-slate-800 bg-white/80 dark:bg-slate-900/60 backdrop-blur-2xl">
-            <div className="flex items-center gap-5">
-                <div className="lg:hidden w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
-                    <GraduationCap className="text-white w-6 h-6" />
-                </div>
-                <div className="flex flex-col">
-                    <h1 className="text-lg font-bold tracking-tight text-emerald-900 dark:text-white leading-none">{settings.schoolName}</h1>
-                    <p className="text-[10px] font-bold text-emerald-600 mt-1 uppercase tracking-widest">{settings.teacherName}</p>
-                </div>
-            </div>
+      <main className="flex-1 relative flex flex-col h-full overflow-hidden">
+        <div className="app-bg-overlay !h-[250px] lg:!h-[350px]"></div>
+        <div className="app-bg-blur !h-[300px] lg:!h-[400px]"></div>
 
-            <div className="flex items-center gap-5">
-                <button 
-                    onClick={() => setIsDarkMode(!isDarkMode)} 
-                    className="w-11 h-11 flex items-center justify-center bg-emerald-50 dark:bg-slate-800 rounded-xl hover:bg-emerald-100 transition-all border border-emerald-100 dark:border-slate-700"
-                >
-                    {isDarkMode ? <Sun className="w-5 h-5 text-amber-500" /> : <Moon className="w-5 h-5 text-emerald-700" />}
-                </button>
-                
-                <div className="flex items-center gap-4 ps-6 border-s border-emerald-100 dark:border-slate-800">
-                    <div className="hidden sm:flex flex-col text-left">
-                        <p className="text-[11px] font-bold leading-none mb-1 text-emerald-900 dark:text-emerald-100">{settings.teacherName}</p>
-                        <p className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest">متصل</p>
-                    </div>
-                    <div className="w-11 h-11 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-emerald-600/20">
-                        <UserIcon className="w-5 h-5" />
-                    </div>
-                </div>
+        {/* Header Section */}
+        <header className="h-32 lg:h-48 flex flex-col items-center justify-center relative shrink-0 px-4">
+          <div className="absolute top-4 right-4 lg:top-6 lg:left-8">
+            <button 
+              onClick={() => setIsDarkMode(!isDarkMode)} 
+              className="flex items-center gap-2 px-3 py-1.5 bg-white/90 dark:bg-slate-800/90 rounded-full shadow-lg text-[10px] lg:text-xs font-bold"
+            >
+              {isDarkMode ? <Sun className="w-3.5 h-3.5 text-amber-500" /> : <Moon className="w-3.5 h-3.5 text-slate-700" />}
+              <span className="hidden sm:inline">الوضع الليلي</span>
+            </button>
+          </div>
+
+          <div className="text-center mt-4">
+            <h1 className="text-2xl lg:text-4xl font-black text-slate-800 dark:text-white drop-shadow-md">{settings.schoolName}</h1>
+            <div className="flex items-center justify-center gap-2 mt-1">
+              <span className="h-[2px] w-6 lg:w-8 bg-emerald-500 rounded-full"></span>
+              <p className="text-slate-600 dark:text-slate-300 font-bold text-xs lg:text-base">{settings.teacherName}</p>
+              <span className="h-[2px] w-6 lg:w-8 bg-emerald-500 rounded-full"></span>
             </div>
+          </div>
         </header>
 
-        <div className="flex-1 overflow-hidden relative z-10 p-4 md:p-8 animate-vibrant">
-            <div className="h-full bg-white/90 dark:bg-slate-900/60 rounded-[2.5rem] border border-emerald-100 dark:border-slate-800 shadow-xl overflow-hidden backdrop-blur-3xl">
-                 {currentView === 'schedule' && (
-                    <WeeklyPlanner 
-                        schedule={schedule} 
-                        classes={classes}
-                        updateSchedule={handleUpdateSchedule}
-                        currentWeek={currentWeek}
-                        setCurrentWeek={setCurrentWeek}
-                        voiceEnabled={settings.voiceEnabled}
-                        isMasterLocked={settings.isMasterScheduleLocked}
-                    />
-                )}
-                {currentView === 'classes' && (
-                    <ClassManager 
-                        classes={classes}
-                        addClass={(n) => {}}
-                        deleteClass={(id) => {}}
-                        addStudent={(cid, n) => {}}
-                        importStudents={(cid, ns) => {}}
-                        deleteStudent={(cid, sid) => {}}
-                    />
-                )}
-                {currentView === 'tracker' && (
-                    <StudentTracker 
-                        classes={classes}
-                        updateStudent={handleUpdateStudent}
-                        currentWeek={currentWeek}
-                        maxGrades={settings.maxGrades}
-                    />
-                )}
-                {currentView === 'tasks' && (
-                    <TaskManager 
-                        tasks={tasks}
-                        addTask={(t, p, d) => {}}
-                        toggleTask={(id) => {}}
-                        deleteTask={(id) => {}}
-                    />
-                )}
-                {currentView === 'reports' && (
-                    <ReportsDashboard 
-                        classes={classes}
-                        schedule={schedule}
-                    />
-                )}
-                {currentView === 'settings' && (
-                    <SettingsView 
-                        settings={settings}
-                        setSettings={setSettings}
-                    />
-                )}
+        {/* Content Section */}
+        <div className="flex-1 overflow-hidden px-4 pb-20 lg:px-10 lg:pb-10">
+          <div className="h-full glass-card rounded-[1.5rem] lg:rounded-[2.5rem] flex flex-col shadow-2xl overflow-hidden animate-fade">
+            <div className="flex-1 overflow-hidden relative">
+              {currentView === 'schedule' && <WeeklyPlanner schedule={schedule} classes={classes} updateSchedule={handleUpdateSchedule} currentWeek={currentWeek} setCurrentWeek={setCurrentWeek} voiceEnabled={settings.voiceEnabled} />}
+              {currentView === 'classes' && <ClassManager classes={classes} addClass={(n) => setClasses([...classes, {id: Math.random().toString(), name: n, students: []}])} deleteClass={(id) => setClasses(classes.filter(c => c.id !== id))} addStudent={(cid, n) => {}} importStudents={(cid, ns) => {}} deleteStudent={(cid, sid) => {}} />}
+              {currentView === 'tracker' && <StudentTracker classes={classes} updateStudent={handleUpdateStudent} currentWeek={currentWeek} maxGrades={settings.maxGrades} />}
+              {currentView === 'tasks' && <TaskManager tasks={tasks} addTask={handleAddTask} toggleTask={handleToggleTask} deleteTask={handleDeleteTask} />}
+              {currentView === 'reports' && <ReportsDashboard classes={classes} schedule={schedule} />}
+              {currentView === 'settings' && <SettingsView settings={settings} setSettings={setSettings} />}
             </div>
+          </div>
         </div>
-        
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[140px] -z-10 pointer-events-none"></div>
       </main>
     </div>
   );
