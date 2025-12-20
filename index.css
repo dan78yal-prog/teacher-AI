@@ -20,6 +20,8 @@ body {
   height: 100dvh;
   overflow: hidden;
   background: #f1f5f9;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .app-bg-overlay {
@@ -39,8 +41,8 @@ body {
   left: 0;
   right: 0;
   background: linear-gradient(to bottom, rgba(241, 245, 249, 0.2), #f1f5f9);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: -1;
 }
 
@@ -50,10 +52,10 @@ body {
 
 .glass-card {
   background: var(--card-glass);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
 }
 
 .dark .glass-card {
@@ -64,11 +66,11 @@ body {
 .sidebar-active {
   background: var(--primary-green) !important;
   color: white !important;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.4);
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 5px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
@@ -78,17 +80,30 @@ body {
   border-radius: 10px;
 }
 
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade {
-  animation: fadeIn 0.4s ease-out forwards;
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-down {
+  animation: fadeDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Ensure inputs are not zoomed on iOS */
@@ -96,4 +111,14 @@ body {
   input, select, textarea {
     font-size: 16px !important;
   }
+}
+
+/* Vibrant Hover Effects */
+.vibrant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
+}
+
+.dark .vibrant-card:hover {
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
 }

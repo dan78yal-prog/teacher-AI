@@ -61,6 +61,13 @@ function App() {
   const handleToggleTask = (id: string) => setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
   const handleDeleteTask = (id: string) => setTasks(tasks.filter(t => t.id !== id));
 
+  const updateMaxGrades = (key: keyof AppSettings['maxGrades'], value: number) => {
+    setSettings(prev => ({
+      ...prev,
+      maxGrades: { ...prev.maxGrades, [key]: value }
+    }));
+  };
+
   return (
     <div className="flex h-[100dvh] w-screen overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors flex-col lg:flex-row">
       <Sidebar currentView={currentView} setView={setCurrentView} teacherName={settings.teacherName} schoolName={settings.schoolName} />
@@ -74,7 +81,7 @@ function App() {
           <div className="absolute top-4 right-4 lg:top-6 lg:left-8">
             <button 
               onClick={() => setIsDarkMode(!isDarkMode)} 
-              className="flex items-center gap-2 px-3 py-1.5 bg-white/90 dark:bg-slate-800/90 rounded-full shadow-lg text-[10px] lg:text-xs font-bold"
+              className="flex items-center gap-2 px-3 py-1.5 bg-white/90 dark:bg-slate-800/90 rounded-full shadow-lg text-[10px] lg:text-xs font-bold transition-all hover:scale-105 active:scale-95"
             >
               {isDarkMode ? <Sun className="w-3.5 h-3.5 text-amber-500" /> : <Moon className="w-3.5 h-3.5 text-slate-700" />}
               <span className="hidden sm:inline">الوضع الليلي</span>
@@ -82,7 +89,7 @@ function App() {
           </div>
 
           <div className="text-center mt-4">
-            <h1 className="text-2xl lg:text-4xl font-black text-slate-800 dark:text-white drop-shadow-md">{settings.schoolName}</h1>
+            <h1 className="text-2xl lg:text-4xl font-black text-slate-800 dark:text-white drop-shadow-md tracking-tight">{settings.schoolName}</h1>
             <div className="flex items-center justify-center gap-2 mt-1">
               <span className="h-[2px] w-6 lg:w-8 bg-emerald-500 rounded-full"></span>
               <p className="text-slate-600 dark:text-slate-300 font-bold text-xs lg:text-base">{settings.teacherName}</p>
@@ -92,12 +99,12 @@ function App() {
         </header>
 
         {/* Content Section */}
-        <div className="flex-1 overflow-hidden px-4 pb-20 lg:px-10 lg:pb-10">
-          <div className="h-full glass-card rounded-[1.5rem] lg:rounded-[2.5rem] flex flex-col shadow-2xl overflow-hidden animate-fade">
+        <div className="flex-1 overflow-hidden px-3 lg:px-10 pb-20 lg:pb-10">
+          <div className="h-full glass-card rounded-[1.5rem] lg:rounded-[2.5rem] flex flex-col shadow-2xl overflow-hidden animate-fade border border-white/40 dark:border-slate-800/50">
             <div className="flex-1 overflow-hidden relative">
               {currentView === 'schedule' && <WeeklyPlanner schedule={schedule} classes={classes} updateSchedule={handleUpdateSchedule} currentWeek={currentWeek} setCurrentWeek={setCurrentWeek} voiceEnabled={settings.voiceEnabled} />}
               {currentView === 'classes' && <ClassManager classes={classes} addClass={(n) => setClasses([...classes, {id: Math.random().toString(), name: n, students: []}])} deleteClass={(id) => setClasses(classes.filter(c => c.id !== id))} addStudent={(cid, n) => {}} importStudents={(cid, ns) => {}} deleteStudent={(cid, sid) => {}} />}
-              {currentView === 'tracker' && <StudentTracker classes={classes} updateStudent={handleUpdateStudent} currentWeek={currentWeek} maxGrades={settings.maxGrades} />}
+              {currentView === 'tracker' && <StudentTracker classes={classes} updateStudent={handleUpdateStudent} currentWeek={currentWeek} maxGrades={settings.maxGrades} updateMaxGrades={updateMaxGrades} />}
               {currentView === 'tasks' && <TaskManager tasks={tasks} addTask={handleAddTask} toggleTask={handleToggleTask} deleteTask={handleDeleteTask} />}
               {currentView === 'reports' && <ReportsDashboard classes={classes} schedule={schedule} />}
               {currentView === 'settings' && <SettingsView settings={settings} setSettings={setSettings} />}
