@@ -33,7 +33,7 @@ export const WeeklyPlanner: React.FC<WeeklyPlannerProps> = ({
       subject: plan?.subject || '',
       topic: plan?.topic || '',
       className: slot.className || '',
-      objectives: plan?.objectives.join('\n') || '',
+      objectives: plan?.objectives?.join('\n') || '',
       homework: plan?.homework || '',
       materials: plan?.materials || '',
       strategy: plan?.strategy || '',
@@ -128,7 +128,6 @@ export const WeeklyPlanner: React.FC<WeeklyPlannerProps> = ({
         </div>
       </div>
 
-      {/* Compact Grid */}
       <div className="flex-1 overflow-auto p-4 md:p-6 custom-scrollbar">
         <div className="grid grid-cols-6 gap-2.5 min-w-[700px]">
             <div className="w-10"></div>
@@ -189,7 +188,6 @@ export const WeeklyPlanner: React.FC<WeeklyPlannerProps> = ({
         </div>
       </div>
 
-      {/* Modal */}
       {isEditing && selectedSlot && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm" onClick={() => setIsEditing(false)}></div>

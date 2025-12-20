@@ -7,7 +7,7 @@ import { StudentTracker } from './components/StudentTracker';
 import { TaskManager } from './components/TaskManager';
 import { ReportsDashboard } from './components/ReportsDashboard';
 import { SettingsView } from './components/SettingsView';
-import { ViewMode, ScheduleSlot, ClassGroup, Student, Task, ThemeColor, AppSettings } from './types';
+import { ViewMode, ScheduleSlot, ClassGroup, Student, Task, AppSettings } from './types';
 import { INITIAL_CLASSES, INITIAL_SCHEDULE } from './constants';
 import { Moon, Sun } from 'lucide-react';
 
@@ -76,7 +76,6 @@ function App() {
         <div className="app-bg-overlay !h-[250px] lg:!h-[350px]"></div>
         <div className="app-bg-blur !h-[300px] lg:!h-[400px]"></div>
 
-        {/* Header Section */}
         <header className="h-32 lg:h-48 flex flex-col items-center justify-center relative shrink-0 px-4">
           <div className="absolute top-4 right-4 lg:top-6 lg:left-8">
             <button 
@@ -98,12 +97,22 @@ function App() {
           </div>
         </header>
 
-        {/* Content Section */}
         <div className="flex-1 overflow-hidden px-3 lg:px-10 pb-20 lg:pb-10">
           <div className="h-full glass-card rounded-[1.5rem] lg:rounded-[2.5rem] flex flex-col shadow-2xl overflow-hidden animate-fade border border-white/40 dark:border-slate-800/50">
             <div className="flex-1 overflow-hidden relative">
               {currentView === 'schedule' && <WeeklyPlanner schedule={schedule} classes={classes} updateSchedule={handleUpdateSchedule} currentWeek={currentWeek} setCurrentWeek={setCurrentWeek} voiceEnabled={settings.voiceEnabled} />}
-              {currentView === 'classes' && <ClassManager classes={classes} addClass={(n) => setClasses([...classes, {id: Math.random().toString(), name: n, students: []}])} deleteClass={(id) => setClasses(classes.filter(c => c.id !== id))} addStudent={(cid, n) => {}} importStudents={(cid, ns) => {}} deleteStudent={(cid, sid) => {}} />}
+              {currentView === 'classes' && (
+                <ClassManager 
+                  classes={classes} 
+                  addClass={(n: string) => setClasses([...classes, {id: Math.random().toString(), name: n, students: []}])} 
+                  deleteClass={(id: string) => setClasses(classes.filter(c => c.id !== id))} 
+                  addStudent={(cid: string, n: string) => {
+                    setClasses(classes.map(c => c.id === cid ? { ...c, students: [...c.students, { id: Math.random().toString(), name: n, notes: '', attendance: {}, participationScore: 0, homeworkScore: 0, activityScore: 0, quizScore: 0 }] } : c));
+                  }} 
+                  importStudents={() => {}} 
+                  deleteStudent={() => {}} 
+                />
+              )}
               {currentView === 'tracker' && <StudentTracker classes={classes} updateStudent={handleUpdateStudent} currentWeek={currentWeek} maxGrades={settings.maxGrades} updateMaxGrades={updateMaxGrades} />}
               {currentView === 'tasks' && <TaskManager tasks={tasks} addTask={handleAddTask} toggleTask={handleToggleTask} deleteTask={handleDeleteTask} />}
               {currentView === 'reports' && <ReportsDashboard classes={classes} schedule={schedule} />}

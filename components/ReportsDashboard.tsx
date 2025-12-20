@@ -8,6 +8,14 @@ interface ReportsDashboardProps {
   schedule: ScheduleSlot[];
 }
 
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  icon: React.ReactNode;
+  color: string;
+  sub?: string;
+}
+
 export const ReportsDashboard: React.FC<ReportsDashboardProps> = ({ classes, schedule }) => {
   const totalStudents = classes.reduce((acc, curr) => acc + curr.students.length, 0);
 
@@ -67,7 +75,7 @@ export const ReportsDashboard: React.FC<ReportsDashboardProps> = ({ classes, sch
   );
 };
 
-const StatCard = ({ title, value, icon, color, sub }: any) => (
+const StatCard: React.FC<StatCardProps> = ({ title, value, icon, color, sub }) => (
   <div className="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-5 lg:p-6 rounded-[1.5rem] lg:rounded-[2rem] flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
     <div className="text-right">
        <p className="text-slate-400 text-[9px] lg:text-[10px] font-bold mb-1 lg:mb-2 uppercase tracking-widest">{title}</p>
