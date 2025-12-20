@@ -220,7 +220,7 @@ export const StudentTracker: React.FC<StudentTrackerProps> = ({ classes, updateS
   );
 };
 
-const MaxGradeInput = ({ label, value, icon, onChange }: { label: string, value: number, icon: any, onChange: (v: number) => void }) => (
+const MaxGradeInput = ({ label, value, icon, onChange }: { label: string, value: number, icon: React.ReactNode, onChange: (v: number) => void }) => (
   <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
     <div className="flex items-center gap-2 mb-2">
       <span className="text-emerald-600">{icon}</span>
@@ -239,7 +239,7 @@ const MaxGradeInput = ({ label, value, icon, onChange }: { label: string, value:
   </div>
 );
 
-const GradeControl = ({ label, value, icon, onDelta, max }: { label: string, value: number, icon: any, onDelta: (d: number) => void, max: number }) => (
+const GradeControl = ({ label, value, icon, onDelta, max }: { label: string, value: number, icon: React.ReactNode, onDelta: (d: number) => void, max: number }) => (
     <div className="space-y-3">
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-emerald-600">

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { DayOfWeek, ScheduleSlot, LessonPlan, ClassGroup } from '../types';
-import { Zap, Wand2, X, Sparkles, ChevronRight, ChevronLeft, Settings2, Plus, Info, Layout, Layers, Save, Target, CheckCircle2, Bookmark, MapPin, Star } from 'lucide-react';
+import { Zap, Wand2, X, Sparkles, ChevronRight, ChevronLeft, Settings2, Plus, Target, Bookmark } from 'lucide-react';
 import { generateLessonPlan } from '../services/geminiService';
 
 interface WeeklyPlannerProps {
@@ -15,7 +15,7 @@ interface WeeklyPlannerProps {
 }
 
 export const WeeklyPlanner: React.FC<WeeklyPlannerProps> = ({ 
-  schedule, classes, updateSchedule, currentWeek, setCurrentWeek, voiceEnabled, isMasterLocked 
+  schedule, classes, updateSchedule, currentWeek, setCurrentWeek, isMasterLocked 
 }) => {
   const [selectedSlot, setSelectedSlot] = useState<ScheduleSlot | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -27,7 +27,7 @@ export const WeeklyPlanner: React.FC<WeeklyPlannerProps> = ({
   });
 
   const handleSlotClick = (slot: ScheduleSlot) => {
-    const plan = slot.weekPlans?.[currentWeek];
+    const plan: LessonPlan | undefined = slot.weekPlans?.[currentWeek];
     setSelectedSlot(slot);
     setFormData({
       subject: plan?.subject || '',
@@ -43,9 +43,9 @@ export const WeeklyPlanner: React.FC<WeeklyPlannerProps> = ({
 
   const handleSave = () => {
     if (!selectedSlot) return;
-    const currentPlan = selectedSlot.weekPlans?.[currentWeek];
+    const currentPlan: LessonPlan | undefined = selectedSlot.weekPlans?.[currentWeek];
     const updatedLesson: LessonPlan = {
-      id: currentPlan?.id || Math.random().toString(),
+      id: currentPlan?.id || Math.random().toString(36).substring(7),
       subject: formData.subject,
       topic: formData.topic,
       objectives: formData.objectives.split('\n').filter(Boolean),
@@ -97,7 +97,7 @@ export const WeeklyPlanner: React.FC<WeeklyPlannerProps> = ({
       {/* Header Controls */}
       <div className="px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 shrink-0 border-b border-slate-50 dark:border-slate-800 bg-white/40 dark:bg-slate-900/40 backdrop-blur-sm">
         <div className="flex items-center gap-3">
-            <div className="w-10 h-10 icon-container !bg-emerald-50 !text-emerald-600">
+            <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
                 <Zap className="w-5 h-5" />
             </div>
             <div>
@@ -145,7 +145,7 @@ export const WeeklyPlanner: React.FC<WeeklyPlannerProps> = ({
                 </div>
                 {days.map((day) => {
                     const slot = schedule.find((s) => s.day === day && s.period === period);
-                    const plan = slot?.weekPlans?.[currentWeek];
+                    const plan: LessonPlan | undefined = slot?.weekPlans?.[currentWeek];
                     const isConfigured = !!slot?.className;
                     
                     return (
@@ -160,7 +160,7 @@ export const WeeklyPlanner: React.FC<WeeklyPlannerProps> = ({
                                     : 'bg-white border-dashed border-emerald-100 dark:bg-slate-800/50 hover:border-emerald-500'
                                   ) 
                                 : (isConfigured 
-                                    ? 'vibrant-card border-slate-100 dark:border-slate-800 hover:border-emerald-500/30' 
+                                    ? 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-800 hover:border-emerald-500/30 shadow-sm' 
                                     : 'bg-slate-100/30 dark:bg-slate-900/20 border-dashed border-slate-200 dark:border-slate-800 hover:border-emerald-500/30'
                                   )
                             }
@@ -189,14 +189,14 @@ export const WeeklyPlanner: React.FC<WeeklyPlannerProps> = ({
         </div>
       </div>
 
-      {/* Modal - Refined & Emerald */}
+      {/* Modal */}
       {isEditing && selectedSlot && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm" onClick={() => setIsEditing(false)}></div>
           <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-sm flex flex-col overflow-hidden animate-vibrant relative z-10 border border-slate-200 dark:border-slate-800">
             <div className="p-4 flex justify-between items-center border-b border-slate-50 dark:border-slate-800">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 icon-container !bg-emerald-50 !text-emerald-600">
+                <div className="w-9 h-9 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
                     <Target className="w-5 h-5" />
                 </div>
                 <div>

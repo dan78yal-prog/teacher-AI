@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { AppSettings, ThemeColor } from '../types';
-import { Settings, Palette, User, School, Check, Volume2, VolumeX, Database, Award, Lock, Unlock, Star, PenTool, Lightbulb, BookOpen } from 'lucide-react';
+import { Settings, Palette, Check, Volume2, VolumeX, Database, Star, PenTool, Lightbulb, BookOpen } from 'lucide-react';
 
 interface SettingsViewProps {
   settings: AppSettings;
@@ -30,7 +30,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSetting
   return (
     <div className="h-full p-6 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 icon-container !bg-emerald-50 !text-emerald-600">
+        <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
           <Settings className="w-5 h-5" />
         </div>
         <div>
@@ -39,8 +39,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSetting
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="vibrant-card p-6 rounded-2xl space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20 lg:pb-0">
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 space-y-6 shadow-sm">
               <h3 className="font-bold text-sm flex items-center gap-2 text-slate-700 dark:text-slate-200"><Palette className="w-4 h-4 text-emerald-600" /> مظهر التطبيق</h3>
               <div className="grid grid-cols-5 gap-3">
                   {colors.map(color => (
@@ -66,14 +66,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSetting
               </div>
           </div>
 
-          <div className="vibrant-card p-6 rounded-2xl space-y-6">
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 space-y-6 shadow-sm">
               <h3 className="font-bold text-sm flex items-center gap-2 text-slate-700 dark:text-slate-200"><Database className="w-4 h-4 text-emerald-600" /> الدرجات القصوى</h3>
               
               <div className="space-y-5 bg-slate-50 dark:bg-slate-900/40 p-5 rounded-2xl border border-slate-100 dark:border-slate-800">
-                <GradeSettingRow label="المشاركة" value={settings.maxGrades.participation} icon={<Star className="w-3.5 h-3.5" />} onChange={(v) => updateMaxGrade('participation', v)} />
-                <GradeSettingRow label="الواجبات" value={settings.maxGrades.homework} icon={<PenTool className="w-3.5 h-3.5" />} onChange={(v) => updateMaxGrade('homework', v)} />
-                <GradeSettingRow label="الأنشطة" value={settings.maxGrades.activity} icon={<Lightbulb className="w-3.5 h-3.5" />} onChange={(v) => updateMaxGrade('activity', v)} />
-                <GradeSettingRow label="الاختبارات" value={settings.maxGrades.quiz} icon={<BookOpen className="w-3.5 h-3.5" />} onChange={(v) => updateMaxGrade('quiz', v)} />
+                <GradeSettingRow label="المشاركة" value={settings.maxGrades.participation} icon={<Star className="w-3.5 h-3.5" />} onChange={(v: number) => updateMaxGrade('participation', v)} />
+                <GradeSettingRow label="الواجبات" value={settings.maxGrades.homework} icon={<PenTool className="w-3.5 h-3.5" />} onChange={(v: number) => updateMaxGrade('homework', v)} />
+                <GradeSettingRow label="الأنشطة" value={settings.maxGrades.activity} icon={<Lightbulb className="w-3.5 h-3.5" />} onChange={(v: number) => updateMaxGrade('activity', v)} />
+                <GradeSettingRow label="الاختبارات" value={settings.maxGrades.quiz} icon={<BookOpen className="w-3.5 h-3.5" />} onChange={(v: number) => updateMaxGrade('quiz', v)} />
               </div>
           </div>
       </div>
@@ -88,7 +88,7 @@ const GradeSettingRow = ({ label, value, icon, onChange }: { label: string, valu
         <span className="opacity-80">{icon}</span>
         <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300">{label}</span>
       </div>
-      <span className="grade-badge-prominent !bg-emerald-600 text-[10px]">{value} د</span>
+      <span className="px-2 py-0.5 bg-emerald-600 text-white rounded-full text-[10px] font-bold">{value} د</span>
     </div>
     <input 
       type="range" 
