@@ -90,12 +90,17 @@ body {
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
+  to { opacity: 1; transform: none; }
 }
 
 @keyframes fadeDown {
   from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes vibrantEntry {
+  0% { opacity: 0; transform: scale(0.98); }
+  100% { opacity: 1; transform: none; }
 }
 
 .animate-fade {
@@ -106,6 +111,10 @@ body {
   animation: fadeDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+.animate-vibrant {
+  animation: vibrantEntry 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 /* Ensure inputs are not zoomed on iOS */
 @media screen and (max-width: 768px) {
   input, select, textarea {
@@ -113,7 +122,6 @@ body {
   }
 }
 
-/* Vibrant Hover Effects */
 .vibrant-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);

@@ -98,7 +98,7 @@ function App() {
         </header>
 
         <div className="flex-1 overflow-hidden px-3 lg:px-10 pb-20 lg:pb-10">
-          <div className="h-full glass-card rounded-[1.5rem] lg:rounded-[2.5rem] flex flex-col shadow-2xl overflow-hidden animate-fade border border-white/40 dark:border-slate-800/50">
+          <div className="h-full glass-card rounded-[1.5rem] lg:rounded-[2.5rem] flex flex-col shadow-2xl animate-fade border border-white/40 dark:border-slate-800/50">
             <div className="flex-1 overflow-hidden relative">
               {currentView === 'schedule' && <WeeklyPlanner schedule={schedule} classes={classes} updateSchedule={handleUpdateSchedule} currentWeek={currentWeek} setCurrentWeek={setCurrentWeek} voiceEnabled={settings.voiceEnabled} />}
               {currentView === 'classes' && (

@@ -62,7 +62,7 @@ export const StudentTracker: React.FC<StudentTrackerProps> = ({ classes, updateS
   };
 
   return (
-    <div className="h-full flex flex-col overflow-hidden animate-vibrant relative">
+    <div className="h-full flex flex-col relative animate-vibrant">
       
       {/* Header Bar */}
       <div className="px-4 lg:px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4 shrink-0 border-b border-slate-50 dark:border-slate-800 bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm z-20">
@@ -106,7 +106,7 @@ export const StudentTracker: React.FC<StudentTrackerProps> = ({ classes, updateS
 
       {/* Quick Max Grade Settings Panel */}
       {showGradeSettings && (
-        <div className="absolute top-[130px] md:top-[73px] left-0 right-0 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 p-4 lg:p-6 z-10 shadow-xl animate-fade-down flex flex-col gap-4">
+        <div className="absolute top-[130px] md:top-[73px] left-0 right-0 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 p-4 lg:p-6 z-30 shadow-xl animate-fade-down flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <h3 className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest flex items-center gap-2">
               <Zap className="w-4 h-4 text-amber-500" /> تعديل الدرجات القصوى
@@ -123,7 +123,7 @@ export const StudentTracker: React.FC<StudentTrackerProps> = ({ classes, updateS
       )}
 
       {/* Tabs */}
-      <div className="px-6 py-3 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0 border-b border-slate-50 dark:border-slate-800 z-0">
+      <div className="px-6 py-3 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0 border-b border-slate-50 dark:border-slate-800 z-10">
           {classes.map(c => (
               <button
                   key={c.id}
@@ -190,8 +190,8 @@ export const StudentTracker: React.FC<StudentTrackerProps> = ({ classes, updateS
 
       {/* Grading Modal */}
       {editingStudent && activeClass && (
-          <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
-              <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm" onClick={() => setEditingStudent(null)}></div>
+          <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
+              <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-md" onClick={() => setEditingStudent(null)}></div>
               <div className="w-full max-w-sm bg-white dark:bg-slate-900 rounded-[2rem] shadow-2xl relative z-10 overflow-hidden animate-vibrant border border-slate-200 dark:border-slate-800">
                   <div className="p-5 flex justify-between items-center border-b border-slate-50 dark:border-slate-800">
                       <div className="flex items-center gap-3">
