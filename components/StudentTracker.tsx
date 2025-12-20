@@ -114,10 +114,10 @@ export const StudentTracker: React.FC<StudentTrackerProps> = ({ classes, updateS
             <button onClick={() => setShowGradeSettings(false)} className="text-slate-400 hover:text-rose-500"><X className="w-5 h-5" /></button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <MaxGradeInput label="المشاركة" value={maxGrades.participation} icon={<Star className="w-3.5 h-3.5" />} onChange={(v) => updateMaxGrades('participation', v)} />
-            <MaxGradeInput label="الواجبات" value={maxGrades.homework} icon={<PenTool className="w-3.5 h-3.5" />} onChange={(v) => updateMaxGrades('homework', v)} />
-            <MaxGradeInput label="الأنشطة" value={maxGrades.activity} icon={<Lightbulb className="w-3.5 h-3.5" />} onChange={(v) => updateMaxGrades('activity', v)} />
-            <MaxGradeInput label="الاختبارات" value={maxGrades.quiz} icon={<BookOpen className="w-3.5 h-3.5" />} onChange={(v) => updateMaxGrades('quiz', v)} />
+            <MaxGradeInput label="المشاركة" value={maxGrades.participation} icon={<Star className="w-3.5 h-3.5" />} onChange={(v: number) => updateMaxGrades('participation', v)} />
+            <MaxGradeInput label="الواجبات" value={maxGrades.homework} icon={<PenTool className="w-3.5 h-3.5" />} onChange={(v: number) => updateMaxGrades('homework', v)} />
+            <MaxGradeInput label="الأنشطة" value={maxGrades.activity} icon={<Lightbulb className="w-3.5 h-3.5" />} onChange={(v: number) => updateMaxGrades('activity', v)} />
+            <MaxGradeInput label="الاختبارات" value={maxGrades.quiz} icon={<BookOpen className="w-3.5 h-3.5" />} onChange={(v: number) => updateMaxGrades('quiz', v)} />
           </div>
         </div>
       )}
@@ -202,10 +202,10 @@ export const StudentTracker: React.FC<StudentTrackerProps> = ({ classes, updateS
                   </div>
 
                   <div className="p-6 space-y-6">
-                      <GradeControl label="المشاركة" value={editingStudent.participationScore} icon={<Star className="w-4 h-4" />} max={maxGrades.participation} onDelta={(d) => updateScore(editingStudent, 'participationScore', d)} />
-                      <GradeControl label="الواجبات" value={editingStudent.homeworkScore} icon={<PenTool className="w-4 h-4" />} max={maxGrades.homework} onDelta={(d) => updateScore(editingStudent, 'homeworkScore', d)} />
-                      <GradeControl label="الأنشطة" value={editingStudent.activityScore} icon={<Lightbulb className="w-4 h-4" />} max={maxGrades.activity} onDelta={(d) => updateScore(editingStudent, 'activityScore', d)} />
-                      <GradeControl label="الاختبارات" value={editingStudent.quizScore} icon={<BookOpen className="w-4 h-4" />} max={maxGrades.quiz} onDelta={(d) => updateScore(editingStudent, 'quizScore', d)} />
+                      <GradeControl label="المشاركة" value={editingStudent.participationScore} icon={<Star className="w-4 h-4" />} max={maxGrades.participation} onDelta={(d: number) => updateScore(editingStudent, 'participationScore', d)} />
+                      <GradeControl label="الواجبات" value={editingStudent.homeworkScore} icon={<PenTool className="w-4 h-4" />} max={maxGrades.homework} onDelta={(d: number) => updateScore(editingStudent, 'homeworkScore', d)} />
+                      <GradeControl label="الأنشطة" value={editingStudent.activityScore} icon={<Lightbulb className="w-4 h-4" />} max={maxGrades.activity} onDelta={(d: number) => updateScore(editingStudent, 'activityScore', d)} />
+                      <GradeControl label="الاختبارات" value={editingStudent.quizScore} icon={<BookOpen className="w-4 h-4" />} max={maxGrades.quiz} onDelta={(d: number) => updateScore(editingStudent, 'quizScore', d)} />
                   </div>
 
                   <div className="p-5 bg-slate-50 dark:bg-slate-800/50 flex justify-end">
@@ -220,7 +220,7 @@ export const StudentTracker: React.FC<StudentTrackerProps> = ({ classes, updateS
   );
 };
 
-const MaxGradeInput = ({ label, value, icon, onChange }: any) => (
+const MaxGradeInput = ({ label, value, icon, onChange }: { label: string, value: number, icon: any, onChange: (v: number) => void }) => (
   <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
     <div className="flex items-center gap-2 mb-2">
       <span className="text-emerald-600">{icon}</span>
@@ -239,7 +239,7 @@ const MaxGradeInput = ({ label, value, icon, onChange }: any) => (
   </div>
 );
 
-const GradeControl = ({ label, value, icon, onDelta, max }: any) => (
+const GradeControl = ({ label, value, icon, onDelta, max }: { label: string, value: number, icon: any, onDelta: (d: number) => void, max: number }) => (
     <div className="space-y-3">
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-emerald-600">

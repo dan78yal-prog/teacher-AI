@@ -43,18 +43,17 @@ export const WeeklyPlanner: React.FC<WeeklyPlannerProps> = ({
 
   const handleSave = () => {
     if (!selectedSlot) return;
-    const currentPlan = selectedSlot.weekPlans?.[currentWeek] || {};
+    const currentPlan = selectedSlot.weekPlans?.[currentWeek];
     const updatedLesson: LessonPlan = {
-      ...currentPlan,
-      id: currentPlan.id || Math.random().toString(),
+      id: currentPlan?.id || Math.random().toString(),
       subject: formData.subject,
       topic: formData.topic,
       objectives: formData.objectives.split('\n').filter(Boolean),
       materials: formData.materials,
-      content: currentPlan.content || '',
+      content: currentPlan?.content || '',
       homework: formData.homework,
       strategy: formData.strategy,
-      isGenerated: !!currentPlan.isGenerated,
+      isGenerated: !!currentPlan?.isGenerated,
     };
     
     updateSchedule({
